@@ -1,6 +1,7 @@
 import hashlib
 import sqlite3
 import secrets
+import time 
 
 account_data = sqlite3.connect('main.db') 
 cursor = account_data.cursor()
@@ -9,7 +10,8 @@ cursor.execute('''
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL UNIQUE,
         password TEXT,
-        salt INTEGER
+        salt INTEGER,
+        creation_date INTEGER
     )
 ''')
 
@@ -60,13 +62,14 @@ def confirm_password(password, confirmation):
 username = input_username()
 print("The next step is to create a password!")
 password = input_password()
+timestamp = time.time()
 print(f"Success! Welcome to the platform, {username}")
 
 salt = secrets.randbelow(999999)
 salted_password = str(salt) + password
 hashed_password = hashlib.sha256(salted_password.encode()).hexdigest()
 
-userdata = (username, hashed_password, salt)
-cursor.execute('INSERT INTO users (name, password, salt) VALUES (?, ?, ?)', userdata)
+userdata = (username, hashed_password, salt, timestamp)
+cursor.execute('INSERT INTO users (name, password, salt, creation_date) VALUES (?, ?, ?, ?)', userdata)
 account_data.commit()
 account_data.close()
