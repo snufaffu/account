@@ -1,6 +1,6 @@
 import hashlib
 import sqlite3
-import random
+import secrets
 
 account_data = sqlite3.connect('main.db') 
 cursor = account_data.cursor()
@@ -62,7 +62,7 @@ print("The next step is to create a password!")
 password = input_password()
 print(f"Success! Welcome to the platform, {username}")
 
-salt = random.randint(1, 10)
+salt = secrets.randbelow(999999)
 salted_password = str(salt) + password
 hashed_password = hashlib.sha256(salted_password.encode()).hexdigest()
 
