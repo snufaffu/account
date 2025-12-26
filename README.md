@@ -1,1 +1,1 @@
-#testing auth
+testing account creation and authentication
